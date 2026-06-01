@@ -28,7 +28,7 @@ void Game::Reset()
 	brick.doubleThick = true;
 	brick.color = ConsoleColor::DarkGreen;
 
-	for (std::vector<Box>::const_iterator i = bricks->begin(); i < bricks->end(); ++i) {
+	for (size_t i = 0; i < 5; ++i) {
 		bricks->push_back(brick);
 		//Not sure if this is necessary for the lab, but without this the boxes would all be drawn over each other.
 		brick.x_position += brick.width;
@@ -86,14 +86,17 @@ void Game::Render() const
 void Game::CheckCollision()
 {
 	// TODO #4 - Update collision to check all bricks
-	if (brick.Contains(ball.x_position + ball.x_velocity, ball.y_position + ball.y_velocity))
-	{
-		brick.color = ConsoleColor(brick.color - 1);
-		ball.y_velocity *= -1;
+	for (std::vector<Box>::iterator i = bricks->begin(); i < bricks->end(); ++i) {
+		if (i->Contains(ball.x_position + ball.x_velocity, ball.y_position + ball.y_velocity))
+		{
+			i->color = ConsoleColor(i->color - 1);
+			ball.y_velocity *= -1;
 
-		// TODO #5 - If the ball hits the same brick 3 times (color == black), remove it from the vector
+			// TODO #5 - If the ball hits the same brick 3 times (color == black), remove it from the vector
 
-	}
+		};
+	};
+	
 
 	// TODO #6 - If no bricks remain, pause ball and display (render) victory text with R to reset
 
