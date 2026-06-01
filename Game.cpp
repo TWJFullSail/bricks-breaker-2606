@@ -20,12 +20,19 @@ void Game::Reset()
 	ResetBall();
 
 	// TODO #2 - Add this brick and 4 more bricks to the vector
+	Box brick;
 	brick.width = 10;
 	brick.height = 2;
 	brick.x_position = 0;
 	brick.y_position = 5;
 	brick.doubleThick = true;
 	brick.color = ConsoleColor::DarkGreen;
+
+	for (std::vector<Box>::const_iterator i = bricks->begin(); i < bricks->end(); ++i) {
+		bricks->push_back(brick);
+		//Not sure if this is necessary for the lab, but without this the boxes would all be drawn over each other.
+		brick.x_position += brick.width;
+	};
 }
 
 void Game::ResetBall()
