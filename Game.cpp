@@ -76,7 +76,9 @@ void Game::Render() const
 	ball.Draw();
 
 	// TODO #3 - Update render to render all bricks
-	brick.Draw();
+	for (std::vector<Box>::const_iterator i = bricks->begin(); i < bricks->end(); ++i) {
+		i->Draw();
+	};	
 
 	Console::Lock(false);
 }
