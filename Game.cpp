@@ -26,7 +26,7 @@ void Game::Reset()
 	brick.x_position = 0;
 	brick.y_position = 5;
 	brick.doubleThick = true;
-	brick.color = ConsoleColor::DarkGreen;
+	brick.color = ConsoleColor::DarkCyan; //Changed to Dark Cyan so that Black would be 3 hits, not 2.
 
 	for (size_t i = 0; i < 5; ++i) {
 		bricks->push_back(brick);
@@ -86,22 +86,25 @@ void Game::Render() const
 void Game::CheckCollision()
 {
 	// TODO #4 - Update collision to check all bricks
-	for (std::vector<Box>::iterator i = bricks->begin(); i < bricks->end(); ++i) {
+	for (std::vector<Box>::iterator i = bricks->begin(); i < bricks->end();) {
 		if (i->Contains(ball.x_position + ball.x_velocity, ball.y_position + ball.y_velocity))
 		{
 			i->color = ConsoleColor(i->color - 1);
-			ball.y_velocity *= -1;
+			ball.y_velocity *= -1;			
+		};
 
-			// TODO #5 - If the ball hits the same brick 3 times (color == black), remove it from the vector
-			if (ConsoleColor::DarkGreen - 3 == i->color) {
-				bricks->erase(i);
-			};
+		// TODO #5 - If the ball hits the same brick 3 times (color == black), remove it from the vector
+		if (ConsoleColor::Black == i->color) {
+			i = bricks->erase(i);			
+		}
+		else {
+			++i;
 		};
 	};
 	
 
 	// TODO #6 - If no bricks remain, pause ball and display (render) victory text with R to reset
-
+	
 
 	if (paddle.Contains(ball.x_position + ball.x_velocity, ball.y_velocity + ball.y_position))
 	{
