@@ -9,7 +9,14 @@ class Game
 	Box paddle;
 
 	// TODO #1 - Instead of storing 1 brick, store a vector of bricks (by value)
-	std::vector<Box> bricks[5];	
+	std::vector<Box> bricks[5];
+
+	//Ok, after reviewing the instructions on FSO before submitting, I see that I didn't do everything correctly.
+	//I needed someway to render the text in the Render method that doesn't have any parameters so rather than trying to add a
+	//	parameter that might break the whole game, I added these two booleans to tell the game if it should continue rendering or
+	//	simply display the end screen.
+	bool end = false;
+	bool victory = false;
 
 public:
 	Game();

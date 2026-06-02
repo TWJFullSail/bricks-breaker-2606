@@ -8,6 +8,8 @@ Game::Game()
 
 void Game::Reset()
 {
+	end = false;
+	bricks->clear();
 	Console::SetWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 	Console::CursorVisible(false);
 	paddle.width = 12;
@@ -27,11 +29,13 @@ void Game::Reset()
 	brick.y_position = 5;
 	brick.doubleThick = true;
 	brick.color = ConsoleColor::DarkCyan; //Changed to Dark Cyan so that Black would be 3 hits, not 2.
-
+	
 	for (size_t i = 0; i < 5; ++i) {
 		bricks->push_back(brick);
 		//Not sure if this is necessary for the lab, but without this the boxes would all be drawn over each other.
-		brick.x_position += brick.width;
+		//Nvm, this is in the instructions on FSO to evenly space them.
+		int spaceBetween = ((WINDOW_WIDTH - brick.width) - (brick.width*4)) / 4;
+		brick.x_position += brick.width + spaceBetween;
 	};
 }
 
@@ -72,13 +76,28 @@ void Game::Render() const
 	Console::Lock(true);
 	Console::Clear();
 	
-	paddle.Draw();
-	ball.Draw();
+	if (!end) {
+		paddle.Draw();
+		ball.Draw();
 
-	// TODO #3 - Update render to render all bricks
-	for (std::vector<Box>::const_iterator i = bricks->begin(); i < bricks->end(); ++i) {
-		i->Draw();
-	};	
+		// TODO #3 - Update render to render all bricks
+		for (std::vector<Box>::const_iterator i = bricks->begin(); i < bricks->end(); ++i) {
+			i->Draw();
+		};		
+	}
+	else {
+		Console::SetCursorPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2); 		
+		
+		if (victory) {
+			std::cout << " You win! \n ";
+		}
+		else {
+			std::cout << " You lose. \n ";
+		};
+
+		Console::SetCursorPosition(WINDOW_WIDTH / 2, Console::CursorRow());
+		std::cout << "Press 'R' to play again.";
+	};
 
 	Console::Lock(false);
 }
@@ -106,7 +125,7 @@ void Game::CheckCollision()
 	// TODO #6 - If no bricks remain, pause ball and display (render) victory text with R to reset
 	if (bricks->size() < 1) {
 		ball.x_velocity = ball.y_velocity = 0;
-		std::cout << "    Victory!!";
+		end = victory = true;
 	};
 
 	if (paddle.Contains(ball.x_position + ball.x_velocity, ball.y_velocity + ball.y_position))
@@ -115,9 +134,9 @@ void Game::CheckCollision()
 	};
 
 	// TODO #7 - If ball touches bottom of window, pause ball and display (render) defeat text with R to reset
-	if (ball.y_position == 30) {
+	// I have no idea why the bottom of my console screen is 30 when the window height is supposed to be 40.
+	if (ball.y_position == WINDOW_HEIGHT) {
 		ball.x_velocity = ball.y_velocity = 0;
-		std::cout << "\n    Defeated. \n";
-		std::cout << "   Press R to reset. \n";
+		end = true;
 	};
 }
