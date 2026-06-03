@@ -135,6 +135,7 @@ void Game::CheckCollision()
 
 	// TODO #7 - If ball touches bottom of window, pause ball and display (render) defeat text with R to reset
 	// I have no idea why the bottom of my console screen is 30 when the window height is supposed to be 40.
+	// Playing with the screen maximized resolved this issue and actually displays the paddle as a box instead of just a line with two prongs.
 	if (ball.y_position == WINDOW_HEIGHT) {
 		ball.x_velocity = ball.y_velocity = 0;
 		end = true;
