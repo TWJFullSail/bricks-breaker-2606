@@ -9,7 +9,7 @@ Game::Game()
 void Game::Reset()
 {
 	end = false;
-	bricks->clear();
+	bricks.clear();
 	Console::SetWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 	Console::CursorVisible(false);
 	paddle.width = 12;
@@ -31,7 +31,7 @@ void Game::Reset()
 	brick.color = ConsoleColor::DarkCyan; //Changed to Dark Cyan so that Black would be 3 hits, not 2.
 	
 	for (size_t i = 0; i < 5; ++i) {
-		bricks->push_back(brick);
+		bricks.push_back(brick);
 		//Not sure if this is necessary for the lab, but without this the boxes would all be drawn over each other.
 		//Nvm, this is in the instructions on FSO to evenly space them.
 		int spaceBetween = ((WINDOW_WIDTH - brick.width) - (brick.width*4)) / 4;
@@ -81,7 +81,7 @@ void Game::Render() const
 		ball.Draw();
 
 		// TODO #3 - Update render to render all bricks
-		for (std::vector<Box>::const_iterator i = bricks->begin(); i < bricks->end(); ++i) {
+		for (std::vector<Box>::const_iterator i = bricks.begin(); i < bricks.end(); ++i) {
 			i->Draw();
 		};		
 	}
@@ -105,7 +105,7 @@ void Game::Render() const
 void Game::CheckCollision()
 {
 	// TODO #4 - Update collision to check all bricks
-	for (std::vector<Box>::iterator i = bricks->begin(); i < bricks->end();) {
+	for (std::vector<Box>::iterator i = bricks.begin(); i < bricks.end();) {
 		if (i->Contains(ball.x_position + ball.x_velocity, ball.y_position + ball.y_velocity))
 		{
 			i->color = ConsoleColor(i->color - 1);
@@ -114,7 +114,7 @@ void Game::CheckCollision()
 
 		// TODO #5 - If the ball hits the same brick 3 times (color == black), remove it from the vector
 		if (ConsoleColor::Black == i->color) {
-			i = bricks->erase(i);			
+			i = bricks.erase(i);			
 		}
 		else {
 			++i;
@@ -123,7 +123,7 @@ void Game::CheckCollision()
 	
 
 	// TODO #6 - If no bricks remain, pause ball and display (render) victory text with R to reset
-	if (bricks->size() < 1) {
+	if (bricks.size() < 1) {
 		ball.x_velocity = ball.y_velocity = 0;
 		end = victory = true;
 	};
